@@ -1,15 +1,12 @@
 import "./App.css";
 
-import Cars from "./components/Cars";
-
-import NewCar from "./components/NewCar";
+import CarsPage from "./components/Cars";
 
 function App() {
   return (
     <div id="Main-Div">
 
-<NewCar/>
-<Cars/>
+<CarsPage/>
 
 
     </div>

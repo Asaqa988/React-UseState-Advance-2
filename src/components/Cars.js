@@ -1,37 +1,102 @@
-import React from "react";
-import Car from "./Car";
+import React, { useState } from "react";
 
 import MercedceCar from "../assets/mercedes benz.jpg";
 import MazdaCar from "../assets/Mazda.jpeg";
 import ToyotaCar from "../assets/toyota_rav.webp";
 
-let CarsData = [
-  { CarName: "Mercedece", CarPrice: 29000, CarImage: MercedceCar },
-  { CarName: "Mazda", CarPrice: 17000, CarImage: MazdaCar },
-  { CarName: "Toyota", CarPrice: 22000, CarImage: ToyotaCar },
-];
+import Kiacar from "../assets/kia.jpg";
 
-function Cars() {
+const ExistingCars = ({ carsData }) => {
   return (
-    <div id="Cars-Container">
-      <Car
-        CarName={CarsData[0].CarName}
-        CarPrice={CarsData[0].CarPrice}
-        CarImage={CarsData[0].CarImage}
-      />
-      <Car
-        CarName={CarsData[1].CarName}
-        CarPrice={CarsData[1].CarPrice}
-        CarImage={CarsData[1].CarImage}
-      />
-      <Car
-        CarName={CarsData[2].CarName}
-        CarPrice={CarsData[2].CarPrice}
-        CarImage={CarsData[2].CarImage}
-      />
+    <div>
+      <h2>Existing Cars</h2>
+      {carsData.map((car, index) => (
+        <div key={index}>
+          <h3>{car.CarName}</h3>
+          <p>Price: ${car.CarPrice}</p>
+          <img src={car.CarImage} alt={car.CarName} />
+        </div>
+      ))}
     </div>
   );
-}
+};
 
-export default Cars;
-<div></div>;
+const NewCarForm = ({ onCarSubmit }) => {
+  const [carName, setCarName] = useState("");
+  const [carPrice, setCarPrice] = useState("");
+  const [carImage, setCarImage] = useState(null);
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const newCar = {
+      CarName: carName,
+      CarPrice: parseInt(carPrice),
+      CarImage: URL.createObjectURL(carImage),
+    };
+
+    onCarSubmit(newCar);
+
+    setCarName("");
+    setCarPrice("");
+    setCarImage(null);
+  };
+
+  return (
+    <div>
+      <h1>Car Information</h1>
+      <form onSubmit={handleFormSubmit}>
+        <label>
+          Car Name:
+          <input
+            type="text"
+            value={carName}
+            onChange={(e) => setCarName(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Car Price:
+          <input
+            type="number"
+            value={carPrice}
+            onChange={(e) => setCarPrice(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Car Image:
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setCarImage(e.target.files[0])}
+          />
+        </label>
+        <br />
+        <button type="submit">Add Car</button>
+      </form>
+    </div>
+  );
+};
+
+const CarsPage = () => {
+  const [carsData, setCarsData] = useState([
+    { CarName: "Mercedece", CarPrice: 29000, CarImage: MercedceCar },
+    { CarName: "Mazda", CarPrice: 17000, CarImage: MazdaCar },
+    { CarName: "Toyota", CarPrice: 22000, CarImage: ToyotaCar },
+    { CarName: "Kia", CarPrice: 15000, CarImage: Kiacar },
+  ]);
+
+  const handleCarSubmit = (newCar) => {
+    setCarsData([...carsData, newCar]);
+  };
+
+  return (
+    <div>
+      <NewCarForm onCarSubmit={handleCarSubmit} />
+      <ExistingCars carsData={carsData} />
+    </div>
+  );
+};
+
+export default CarsPage;
